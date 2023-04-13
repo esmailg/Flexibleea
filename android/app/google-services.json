@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "240261193265",
+    "project_id": "flexibleea-5b117",
+    "storage_bucket": "flexibleea-5b117.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:240261193265:android:61580097ff07c75922bf10",
+        "android_client_info": {
+          "package_name": "com.example.flexibleea"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "240261193265-nmuvql1dsils3flvubdh8nqna8l33g1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMjnRjv_B3kY8h-7FDvIC8TyxqytsxLKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "240261193265-nmuvql1dsils3flvubdh8nqna8l33g1e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
