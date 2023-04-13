@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 scaffoldBackgroundColor: Colors.white,
                 primarySwatch: Colors.amber),
-            home: const Login(),
+            home: Login(),
           );
         });
   }
