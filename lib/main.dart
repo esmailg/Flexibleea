@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flexibleea/login/login_screen.dart';
+import 'package:flexibleea/user_state.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -7,6 +8,7 @@ void main() {
   runApp(MyApp());
 }
 
+// ignore: use_key_in_widget_constructors
 class MyApp extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
@@ -42,7 +44,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 scaffoldBackgroundColor: Colors.white,
                 primarySwatch: Colors.amber),
-            home: Login(),
+            home: UserState(),
           );
         });
   }
@@ -132,3 +134,5 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+// dart pub global run flutterfire_cli:flutterfire configure

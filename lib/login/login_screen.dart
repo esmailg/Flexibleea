@@ -1,7 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flexibleea/services/global_methods.dart';
 import 'package:flexibleea/signup/signup_page.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
+import 'forgot_password.dart';
+
+// ignore: use_key_in_widget_constructors
 class Login extends StatefulWidget {
   @override
   State<Login> createState() => _LoginState();
@@ -15,7 +20,8 @@ class _LoginState extends State<Login> {
       TextEditingController(text: '');
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passFocusNode = FocusNode();
-
+  bool _isLoading = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _loginFormKey = GlobalKey<FormState>();
 
   Widget buildEmail() {
@@ -88,8 +94,8 @@ class _LoginState extends State<Login> {
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                const BoxShadow(
+              boxShadow: const [
+                BoxShadow(
                     color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
               ]),
           height: 60,
@@ -125,38 +131,13 @@ class _LoginState extends State<Login> {
       alignment: Alignment.centerRight,
       child: TextButton(
         style: TextButton.styleFrom(padding: const EdgeInsets.only(right: 0)),
-        onPressed: () => print("Forgot Password"),
+        // ignore: avoid_print
+        onPressed: () => Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ForgotPassword())),
         child: const Text(
           'Forgot Password?',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-      ),
-    );
-  }
-
-  Widget buildRemember() {
-    return SizedBox(
-      height: 20,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: Checkbox(
-              value: isRememberMe,
-              checkColor: Colors.green,
-              activeColor: Colors.white,
-              onChanged: (value) {
-                setState(() {
-                  isRememberMe = value!;
-                });
-              },
-            ),
-          ),
-          const Text(
-            'Remember me',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          )
-        ],
       ),
     );
   }
@@ -171,9 +152,10 @@ class _LoginState extends State<Login> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(15),
-                backgroundColor: Color.fromARGB(255, 255, 206, 28),
+                backgroundColor: const Color.fromARGB(255, 255, 206, 28),
               ),
-              onPressed: () => print('Login'),
+              // ignore: avoid_print
+              onPressed: _submitFormLogin,
               child: const Text(
                 'Log In',
                 style: TextStyle(
@@ -203,6 +185,31 @@ class _LoginState extends State<Login> {
                 color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold))
       ])),
     );
+  }
+
+  void _submitFormLogin() async {
+    final isValid = _loginFormKey.currentState!.validate();
+    if (isValid) {
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        await _auth.signInWithEmailAndPassword(
+          email: _emailTextController.text.trim().toLowerCase(),
+          password: _passTextController.text.trim(),
+        );
+        Navigator.canPop(context) ? Navigator.pop(context) : null;
+      } catch (error) {
+        setState(() {
+          _isLoading = false;
+        });
+        GlobalMethod.showErrorDialog(error: error.toString(), ctx: context);
+        print('Error occured $error');
+      }
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -242,7 +249,6 @@ class _LoginState extends State<Login> {
                     const SizedBox(height: 20),
                     buildPassword(),
                     buildForgotPassButton(),
-                    buildRemember(),
                     buildLoginBtn(),
                     buildSignUpBtn(),
                   ],

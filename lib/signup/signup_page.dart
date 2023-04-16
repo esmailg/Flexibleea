@@ -1,11 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flexibleea/services/global_methods.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -27,50 +32,72 @@ class _SignUpState extends State<SignUp> {
   final FocusNode _phoneFocusNode = FocusNode();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passFocusNode = FocusNode();
-
   final _signUpFormKey = GlobalKey<FormState>();
-
   File? imageFile;
   bool _isLoading = false;
-
+  String? imageUrl;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void dispose() {
+    _nameTextController.dispose();
+    _emailTextController.dispose();
+    _passTextController.dispose();
+    _phoneTextController.dispose();
+    _nameFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _passFocusNode.dispose();
+    _phoneFocusNode.dispose();
+    super.dispose();
+  }
 
   void _submitFormSignUP() async {
     final isValid = _signUpFormKey.currentState!.validate();
     if (isValid) {
-      return;
+      if (imageFile == null) {
+        GlobalMethod.showErrorDialog(
+          ctx: context,
+          error: 'Please pick an image',
+        );
+        return;
+      }
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        await _auth.createUserWithEmailAndPassword(
+          email: _emailTextController.text.trim().toLowerCase(),
+          password: _passTextController.text.trim(),
+        );
+        final User? user = _auth.currentUser;
+        final _uid = user!.uid;
+        // ignore: prefer_interpolation_to_compose_strings
+        final ref =
+            FirebaseStorage.instance.ref('userImages').child(_uid + '.jpg');
+        await ref.putFile(imageFile!);
+        imageUrl = await ref.getDownloadURL();
+        FirebaseFirestore.instance.collection('Users').doc(_uid).set({
+          'id': _uid,
+          'name': _nameTextController.text,
+          'email': _emailTextController.text,
+          'phoneNumber': _phoneTextController.text,
+          'createdAt': Timestamp.now(),
+          'Avatar': imageUrl,
+        });
+
+        Navigator.canPop(context) ? Navigator.pop(context) : null;
+      } catch (error) {
+        setState(() {
+          _isLoading = false;
+        });
+        GlobalMethod.showErrorDialog(ctx: context, error: error.toString());
+      }
     }
     setState(() {
-      _isLoading = true;
+      _isLoading = false;
     });
-
-    try {
-      await _auth.createUserWithEmailAndPassword(
-        email: _emailTextController.text.trim().toLowerCase(),
-        password: _passTextController.text.trim(),
-      );
-      final User? user = _auth.currentUser;
-      final _uid = user!.uid;
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child('userInformation')
-          .child(_uid + '.txt');
-      await ref.putFile(imageFile!);
-      FirebaseFirestore.instance.collection('Users').doc(_uid).set({
-        'id': _uid,
-        'name': _nameTextController.text,
-        'email': _emailTextController.text,
-        'phoneNumber': _phoneTextController.text,
-        'createdAt': Timestamp.now(),
-      });
-
-// ignore: use_build_context_synchronously
-      Navigator.canPop(context) ? Navigator.of(context) : null;
-    } catch (error) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 
   Widget buildName() {
@@ -89,8 +116,8 @@ class _SignUpState extends State<SignUp> {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    const BoxShadow(
+                  boxShadow: const [
+                    BoxShadow(
                         color: Colors.black26,
                         blurRadius: 6,
                         offset: Offset(0, 2))
@@ -137,8 +164,8 @@ class _SignUpState extends State<SignUp> {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    const BoxShadow(
+                  boxShadow: const [
+                    BoxShadow(
                         color: Colors.black26,
                         blurRadius: 6,
                         offset: Offset(0, 2))
@@ -185,8 +212,8 @@ class _SignUpState extends State<SignUp> {
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    const BoxShadow(
+                  boxShadow: const [
+                    BoxShadow(
                         color: Colors.black26,
                         blurRadius: 6,
                         offset: Offset(0, 2))
@@ -232,8 +259,8 @@ class _SignUpState extends State<SignUp> {
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                const BoxShadow(
+              boxShadow: const [
+                BoxShadow(
                     color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))
               ]),
           height: 40,
@@ -251,7 +278,7 @@ class _SignUpState extends State<SignUp> {
                 return null;
               }
             },
-            style: TextStyle(color: Colors.black87),
+            style: const TextStyle(color: Colors.black87),
             decoration: const InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(top: 7),
@@ -263,6 +290,88 @@ class _SignUpState extends State<SignUp> {
         )
       ],
     );
+  }
+
+  void _showImageDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Choose option'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  onTap: () {
+                    _getFromCamera();
+                  },
+                  child: Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Icon(
+                          Icons.camera,
+                          color: Color.fromARGB(255, 117, 48, 134),
+                        ),
+                      ),
+                      Text(
+                        'Camera',
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 117, 48, 134)),
+                      )
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    _getFromPhotos();
+                  },
+                  child: Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Icon(
+                          Icons.image,
+                          color: Color.fromARGB(255, 117, 48, 134),
+                        ),
+                      ),
+                      Text(
+                        'Photos',
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 117, 48, 134)),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  void _getFromCamera() async {
+    XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+    _cropImage(pickedFile!.path);
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
+  }
+
+  void _getFromPhotos() async {
+    XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    _cropImage(pickedFile!.path);
+    Navigator.pop(context);
+  }
+
+  void _cropImage(filePath) async {
+    CroppedFile? croppedImage = await ImageCropper()
+        .cropImage(sourcePath: filePath, maxHeight: 1080, maxWidth: 1080);
+    if (croppedImage != null) {
+      setState(() {
+        imageFile = File(croppedImage.path);
+      });
+    }
   }
 
   @override
@@ -328,7 +437,7 @@ class _SignUpState extends State<SignUp> {
                               borderRadius: BorderRadius.circular(13),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 14),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const [
@@ -369,7 +478,7 @@ class _SignUpState extends State<SignUp> {
                             style: const TextStyle(
                               color: Color.fromARGB(255, 117, 48, 134),
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: 18,
                             )),
                       ])),
                     )
@@ -377,6 +486,43 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
             ),
+            Form(
+              key: _signUpFormKey,
+              child: Column(children: [
+                GestureDetector(
+                  onTap: () {
+                    _showImageDialog();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 180, horizontal: 165),
+                    child: Container(
+                      width: size.width * 0.24,
+                      height: size.width * 0.24,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 3,
+                          color: const Color.fromARGB(255, 117, 48, 134),
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: imageFile == null
+                              ? const Icon(
+                                  Icons.camera_enhance_sharp,
+                                  color: Color.fromARGB(255, 117, 48, 134),
+                                  size: 30,
+                                )
+                              : Image.file(
+                                  imageFile!,
+                                  fit: BoxFit.fill,
+                                )),
+                    ),
+                  ),
+                )
+              ]),
+            )
           ],
         )),
       ),
