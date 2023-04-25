@@ -177,7 +177,7 @@ class _LoginState extends State<Login> {
       child: RichText(
           text: const TextSpan(children: [
         TextSpan(
-            text: 'Don\'t have an Account?',
+            text: 'Don\'t have an Account? ',
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -185,7 +185,7 @@ class _LoginState extends State<Login> {
         TextSpan(
             text: 'Sign Up',
             style: TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold))
+                color: Colors.amber, fontSize: 18, fontWeight: FontWeight.bold))
       ])),
     );
   }
@@ -212,35 +212,6 @@ class _LoginState extends State<Login> {
     }
     setState(() {
       _isLoading = false;
-    });
-  }
-
-  void route() {
-    User? user = FirebaseAuth.instance.currentUser;
-    var kk = FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        if (documentSnapshot.get('roll') == "Freelancer") {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
-          );
-        } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomeScreenRecruiter(),
-            ),
-          );
-        }
-      } else {
-        print('Document does not exist on database');
-      }
     });
   }
 
@@ -291,5 +262,34 @@ class _LoginState extends State<Login> {
         )),
       ),
     );
+  }
+
+  void route() {
+    User? user = FirebaseAuth.instance.currentUser;
+    var kk = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        if (documentSnapshot.get('roll') == "Freelancer") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeScreenRecruiter(),
+            ),
+          );
+        }
+      } else {
+        print('Document does not exist on database');
+      }
+    });
   }
 }

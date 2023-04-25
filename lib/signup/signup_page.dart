@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flexibleea/home/home_screen_freelancer.dart';
+import 'package:flexibleea/login/login_screen.dart';
+import 'package:flexibleea/recruiter/home_screen_recruiter.dart';
 import 'package:flexibleea/services/global_methods.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
@@ -341,6 +344,26 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
+  Widget buildLoginBtn() {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Login())),
+      child: RichText(
+          text: const TextSpan(children: [
+        TextSpan(
+            text: 'Already have an account? ',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w500)),
+        TextSpan(
+            text: 'Login',
+            style: TextStyle(
+                color: Colors.amber, fontSize: 18, fontWeight: FontWeight.bold))
+      ])),
+    );
+  }
+
   void _showImageDialog() {
     showDialog(
         context: context,
@@ -467,7 +490,7 @@ class _SignUpState extends State<SignUp> {
                     buildPassword(),
                     const SizedBox(height: 20),
                     buildRoll(),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 20),
                     _isLoading
                         ? Center(
                             child: Container(
@@ -502,35 +525,8 @@ class _SignUpState extends State<SignUp> {
                               ),
                             ),
                           ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Center(
-                      child: RichText(
-                          text: TextSpan(children: [
-                        const TextSpan(
-                            text: 'Already have an account?',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 255, 248, 206),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            )),
-                        const TextSpan(
-                          text: '   ',
-                        ),
-                        TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () => Navigator.canPop(context)
-                                  ? Navigator.pop(context)
-                                  : null,
-                            text: 'Log In',
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 117, 48, 134),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            )),
-                      ])),
-                    )
+                    const SizedBox(height: 20),
+                    buildLoginBtn(),
                   ],
                 ),
               ),
