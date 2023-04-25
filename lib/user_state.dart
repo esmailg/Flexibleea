@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flexibleea/home/home_screen.dart';
+import 'package:flexibleea/home/home_screen_freelancer.dart';
 import 'package:flexibleea/login/login_screen.dart';
 import 'package:flutter/material.dart';
 

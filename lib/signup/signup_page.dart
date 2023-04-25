@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -37,6 +36,12 @@ class _SignUpState extends State<SignUp> {
   bool _isLoading = false;
   String? imageUrl;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  var options = [
+    'Freelancer',
+    'Recruiter',
+  ];
+  var _currentSelect = "Freelancer";
+  var roll = "Freelancer";
 
   @override
   void dispose() {
@@ -67,10 +72,12 @@ class _SignUpState extends State<SignUp> {
       });
 
       try {
-        await _auth.createUserWithEmailAndPassword(
-          email: _emailTextController.text.trim().toLowerCase(),
-          password: _passTextController.text.trim(),
-        );
+        await _auth
+            .createUserWithEmailAndPassword(
+              email: _emailTextController.text.trim().toLowerCase(),
+              password: _passTextController.text.trim(),
+            )
+            .then((value) => roll);
         final User? user = _auth.currentUser;
         final _uid = user!.uid;
         // ignore: prefer_interpolation_to_compose_strings
@@ -83,8 +90,9 @@ class _SignUpState extends State<SignUp> {
           'name': _nameTextController.text,
           'email': _emailTextController.text,
           'phoneNumber': _phoneTextController.text,
-          'createdAt': Timestamp.now(),
+          'Roll': _currentSelect,
           'Avatar': imageUrl,
+          'createdAt': Timestamp.now(),
         });
 
         Navigator.canPop(context) ? Navigator.pop(context) : null;
@@ -292,6 +300,47 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
+  Widget buildRoll() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        const Text(
+          'Roll',
+          style: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        DropdownButton<String>(
+          dropdownColor: Colors.white,
+          isDense: true,
+          isExpanded: false,
+          iconEnabledColor: Colors.white,
+          focusColor: Colors.amberAccent,
+          items: options.map((String dropDownStringItem) {
+            return DropdownMenuItem<String>(
+              value: dropDownStringItem,
+              child: Text(
+                dropDownStringItem,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            );
+          }).toList(),
+          onChanged: (newValueSelected) {
+            setState(() {
+              _currentSelect = newValueSelected!;
+              roll = newValueSelected;
+            });
+          },
+          value: _currentSelect,
+        ),
+      ],
+    );
+  }
+
   void _showImageDialog() {
     showDialog(
         context: context,
@@ -416,9 +465,9 @@ class _SignUpState extends State<SignUp> {
                     buildEmail(),
                     const SizedBox(height: 20),
                     buildPassword(),
-                    const SizedBox(
-                      height: 25,
-                    ),
+                    const SizedBox(height: 20),
+                    buildRoll(),
+                    const SizedBox(height: 25),
                     _isLoading
                         ? Center(
                             child: Container(
