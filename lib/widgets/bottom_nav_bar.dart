@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flexibleea/discover/discover_page.dart';
 import 'package:flexibleea/freelancer/expertise.dart';
 import 'package:flexibleea/freelancer/profie_freelancer.dart';
 import 'package:flexibleea/home/home_screen_freelancer.dart';
@@ -72,14 +73,19 @@ class BottomNavigationBarApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CurvedNavigationBar(
-      color: const Color.fromARGB(223, 163, 47, 220),
+      color: Color.fromARGB(140, 157, 47, 220),
       buttonBackgroundColor: const Color.fromARGB(223, 163, 47, 220),
       backgroundColor: const Color.fromARGB(156, 211, 141, 247),
-      height: 50,
+      height: 70,
       index: indexNum,
       items: const [
         Icon(
           Icons.home,
+          size: 19,
+          color: Colors.white,
+        ),
+        Icon(
+          Icons.search,
           size: 19,
           color: Colors.white,
         ),
@@ -109,11 +115,14 @@ class BottomNavigationBarApp extends StatelessWidget {
               context, MaterialPageRoute(builder: (_) => const HomeScreen()));
         } else if (index == 1) {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const Expertise()));
+              context, MaterialPageRoute(builder: (_) => DiscoverPage()));
         } else if (index == 2) {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => const Expertise()));
+        } else if (index == 3) {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (_) => const FreelancerProfile()));
-        } else if (index == 3) {
+        } else if (index == 4) {
           _logout(context);
         }
       },

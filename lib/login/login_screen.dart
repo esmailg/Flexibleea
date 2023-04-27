@@ -1,12 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flexibleea/services/global_methods.dart';
 import 'package:flexibleea/signup/signup_page.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-
-import '../home/home_screen_freelancer.dart';
-import '../recruiter/home_screen_recruiter.dart';
 import 'forgot_password.dart';
 
 // ignore: use_key_in_widget_constructors
@@ -159,6 +155,7 @@ class _LoginState extends State<Login> {
               ),
               // ignore: avoid_print
               onPressed: _submitFormLogin,
+
               child: const Text(
                 'Log In',
                 style: TextStyle(
@@ -262,34 +259,5 @@ class _LoginState extends State<Login> {
         )),
       ),
     );
-  }
-
-  void route() {
-    User? user = FirebaseAuth.instance.currentUser;
-    var kk = FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        if (documentSnapshot.get('roll') == "Freelancer") {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
-          );
-        } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomeScreenRecruiter(),
-            ),
-          );
-        }
-      } else {
-        print('Document does not exist on database');
-      }
-    });
   }
 }

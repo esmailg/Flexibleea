@@ -17,7 +17,7 @@ class _FreelancerProfileState extends State<FreelancerProfile> {
       ),
       child: Scaffold(
         bottomNavigationBar: BottomNavigationBarApp(
-          indexNum: 1,
+          indexNum: 3,
         ),
         backgroundColor: Colors.transparent,
         appBar: AppBar(
