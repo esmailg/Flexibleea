@@ -1,8 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flexibleea/home/home_screen_freelancer.dart';
-import 'package:flexibleea/login/login_screen.dart';
-import 'package:flexibleea/recruiter/home_screen_recruiter.dart';
-import 'package:flexibleea/signup/signup_page.dart';
 import 'package:flexibleea/user_state.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +44,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 scaffoldBackgroundColor: Colors.white,
                 primarySwatch: Colors.amber),
-            home: UserState(),
+            home: Login(),
           );
         });
   }

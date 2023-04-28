@@ -48,6 +48,7 @@ dependencies:
   cloud_firestore: ^4.5.0
   firebase_storage: ^11.1.0
   universal_html: ^2.2.1
+  time_range_picker: ^2.2.0
 
 dev_dependencies:
   flutter_test:

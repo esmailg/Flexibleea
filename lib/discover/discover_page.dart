@@ -1,14 +1,13 @@
-import 'package:flexibleea/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
-class FreelancerProfile extends StatefulWidget {
-  const FreelancerProfile({super.key});
+import '../widgets/bottom_nav_bar.dart';
 
+class DiscoverPage extends StatefulWidget {
   @override
-  State<FreelancerProfile> createState() => _FreelancerProfileState();
+  State<DiscoverPage> createState() => _DiscoverPageState();
 }
 
-class _FreelancerProfileState extends State<FreelancerProfile> {
+class _DiscoverPageState extends State<DiscoverPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,12 +15,10 @@ class _FreelancerProfileState extends State<FreelancerProfile> {
         color: Colors.white,
       ),
       child: Scaffold(
-        bottomNavigationBar: BottomNavigationBarApp(
-          indexNum: 1,
-        ),
+        bottomNavigationBar: BottomNavigationBarApp(indexNum: 1),
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: const Text('Profile'),
+          title: const Text('Discover'),
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               color: Color.fromARGB(223, 163, 47, 220),

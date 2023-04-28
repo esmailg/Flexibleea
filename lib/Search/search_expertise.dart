@@ -1,17 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flexibleea/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/bottom_nav_bar.dart';
-
-class HomeScreenRecruiter extends StatefulWidget {
-  const HomeScreenRecruiter({super.key});
-
+class SearchScreen extends StatefulWidget {
   @override
-  State<HomeScreenRecruiter> createState() => _HomeScreenRecruiterState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _HomeScreenRecruiterState extends State<HomeScreenRecruiter> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,10 +14,10 @@ class _HomeScreenRecruiterState extends State<HomeScreenRecruiter> {
         color: Colors.white,
       ),
       child: Scaffold(
-        bottomNavigationBar: BottomNavigationBarApp(indexNum: 0),
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: const Text('Home'),
+          title: const Text('Search Expertise'),
+          centerTitle: true,
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               color: Color.fromARGB(223, 163, 47, 220),

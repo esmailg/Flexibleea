@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flexibleea/home/home_screen_freelancer.dart';
 import 'package:flexibleea/login/login_screen.dart';
-import 'package:flexibleea/recruiter/home_screen_recruiter.dart';
 import 'package:flexibleea/services/global_methods.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
@@ -39,12 +38,6 @@ class _SignUpState extends State<SignUp> {
   bool _isLoading = false;
   String? imageUrl;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  var options = [
-    'Freelancer',
-    'Recruiter',
-  ];
-  var _currentSelect = "Freelancer";
-  var roll = "Freelancer";
 
   @override
   void dispose() {
@@ -75,12 +68,10 @@ class _SignUpState extends State<SignUp> {
       });
 
       try {
-        await _auth
-            .createUserWithEmailAndPassword(
-              email: _emailTextController.text.trim().toLowerCase(),
-              password: _passTextController.text.trim(),
-            )
-            .then((value) => roll);
+        await _auth.createUserWithEmailAndPassword(
+          email: _emailTextController.text.trim().toLowerCase(),
+          password: _passTextController.text.trim(),
+        );
         final User? user = _auth.currentUser;
         final _uid = user!.uid;
         // ignore: prefer_interpolation_to_compose_strings
@@ -93,7 +84,6 @@ class _SignUpState extends State<SignUp> {
           'name': _nameTextController.text,
           'email': _emailTextController.text,
           'phoneNumber': _phoneTextController.text,
-          'Roll': _currentSelect,
           'Avatar': imageUrl,
           'createdAt': Timestamp.now(),
         });
@@ -303,47 +293,6 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget buildRoll() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        const Text(
-          'Roll',
-          style: TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 10),
-        DropdownButton<String>(
-          dropdownColor: Colors.white,
-          isDense: true,
-          isExpanded: false,
-          iconEnabledColor: Colors.white,
-          focusColor: Colors.amberAccent,
-          items: options.map((String dropDownStringItem) {
-            return DropdownMenuItem<String>(
-              value: dropDownStringItem,
-              child: Text(
-                dropDownStringItem,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            );
-          }).toList(),
-          onChanged: (newValueSelected) {
-            setState(() {
-              _currentSelect = newValueSelected!;
-              roll = newValueSelected;
-            });
-          },
-          value: _currentSelect,
-        ),
-      ],
-    );
-  }
-
   Widget buildLoginBtn() {
     return GestureDetector(
       onTap: () => Navigator.push(
@@ -488,9 +437,7 @@ class _SignUpState extends State<SignUp> {
                     buildEmail(),
                     const SizedBox(height: 20),
                     buildPassword(),
-                    const SizedBox(height: 20),
-                    buildRoll(),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 40),
                     _isLoading
                         ? Center(
                             child: Container(
@@ -518,7 +465,7 @@ class _SignUpState extends State<SignUp> {
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 20,
+                                      fontSize: 24,
                                     ),
                                   )
                                 ],
