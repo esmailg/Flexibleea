@@ -181,7 +181,7 @@ class _ExpertiseState extends State<Expertise> {
     if (picked != null) {
       setState(() {
         _datePickerController.text =
-            '${picked!.start.year} / ${picked!.start.month} / ${picked!.start.day}  To  ${picked!.end.year} / ${picked!.end.month} / ${picked!.end.day}';
+            '${picked!.start.year}/${picked!.start.month}/${picked!.start.day}  To  ${picked!.end.year}/${picked!.end.month}/${picked!.end.day}';
       });
     }
   }
@@ -196,7 +196,7 @@ class _ExpertiseState extends State<Expertise> {
     if (result != null) {
       setState(() {
         _timePickerController.text =
-            '${result!.toString()}  - ${result!.toString()}';
+            '${result!.startTime} - ${result!.endTime}';
       });
     }
   }
@@ -267,6 +267,27 @@ class _ExpertiseState extends State<Expertise> {
     } else {
       print('Not Valid');
     }
+  }
+
+  void getFreeLancerData() async {
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    setState(() {
+      name = userDoc.get('name');
+      userImage = userDoc.get('userImage');
+      phone = userDoc.get('phoneNumber');
+      availableDate = userDoc.get('availableDate');
+      availableTime = userDoc.get('availableTime');
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getFreeLancerData();
   }
 
   @override

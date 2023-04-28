@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flexibleea/services/global_methods.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ExpertiseWidget extends StatefulWidget {
   final String expertiseTitle;
@@ -7,7 +11,7 @@ class ExpertiseWidget extends StatefulWidget {
   final String uploadedBy;
   final String userImage;
   final String name;
-  final String recruitment;
+  final bool recruitment;
   final String email;
   final String phone;
   final String availableDate;
@@ -32,6 +36,60 @@ class ExpertiseWidget extends StatefulWidget {
 }
 
 class _ExpertiseWidgetState extends State<ExpertiseWidget> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  _deleteExpertise() {
+    User? user = _auth.currentUser;
+    final _uid = user!.uid;
+    showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  try {
+                    if (widget.uploadedBy == _uid) {
+                      await FirebaseFirestore.instance
+                          .collection('Freelancer Expertise')
+                          .doc(widget.expertiseId)
+                          .delete();
+                      await Fluttertoast.showToast(
+                        msg: 'Expertise deleted',
+                        toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: Colors.grey,
+                        fontSize: 18.0,
+                      );
+                      // ignore: use_build_context_synchronously
+                      Navigator.canPop(context) ? Navigator.pop(context) : null;
+                    } else {
+                      GlobalMethod.showErrorDialog(
+                          ctx: ctx, error: 'Cannot perform action');
+                    }
+                  } catch (error) {
+                    GlobalMethod.showErrorDialog(
+                        ctx: ctx, error: 'Expertise cannot be deleted');
+                  } finally {}
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.delete_rounded,
+                      color: Colors.purple,
+                    ),
+                    Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.purple),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -40,7 +98,9 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: ListTile(
         onTap: () {},
-        onLongPress: () {},
+        onLongPress: () {
+          _deleteExpertise();
+        },
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         leading: Container(
@@ -57,15 +117,18 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-            color: Colors.amber,
+            color: Color.fromARGB(233, 18, 72, 236),
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: 20,
           ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const SizedBox(
+              height: 4,
+            ),
             Text(
               widget.name,
               maxLines: 2,
@@ -73,11 +136,11 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: 16,
               ),
             ),
             const SizedBox(
-              height: 8,
+              height: 4,
             ),
             Text(
               widget.expertiseDescription,
@@ -85,8 +148,11 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: Colors.black,
-                fontSize: 12,
+                fontSize: 14,
               ),
+            ),
+            const SizedBox(
+              height: 4,
             ),
             Text(
               widget.availableDate,
@@ -97,6 +163,9 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
               ),
+            ),
+            const SizedBox(
+              height: 2,
             ),
             Text(
               widget.availableTime,

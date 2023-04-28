@@ -84,7 +84,7 @@ class _SignUpState extends State<SignUp> {
           'name': _nameTextController.text,
           'email': _emailTextController.text,
           'phoneNumber': _phoneTextController.text,
-          'Avatar': imageUrl,
+          'userImage': imageUrl,
           'createdAt': Timestamp.now(),
         });
 
