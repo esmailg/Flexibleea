@@ -198,6 +198,7 @@ class _LoginState extends State<Login> {
           email: _emailTextController.text.trim().toLowerCase(),
           password: _passTextController.text.trim(),
         );
+        // ignore: use_build_context_synchronously
         Navigator.canPop(context) ? Navigator.pop(context) : null;
       } catch (error) {
         setState(() {

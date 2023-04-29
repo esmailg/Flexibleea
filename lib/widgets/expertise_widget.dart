@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flexibleea/freelancer/freelancer_details.dart';
 import 'package:flexibleea/services/global_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -93,11 +94,21 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white24,
-      elevation: 8,
+      color: Color.fromARGB(60, 214, 167, 239),
+      elevation: 7,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: ListTile(
-        onTap: () {},
+        onTap: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FreelancerDetailsScreen(
+                uploadedBy: widget.uploadedBy,
+                expertiseId: widget.expertiseId,
+              ),
+            ),
+          );
+        },
         onLongPress: () {
           _deleteExpertise();
         },
@@ -117,7 +128,7 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-            color: Color.fromARGB(233, 18, 72, 236),
+            color: Color.fromARGB(255, 28, 138, 222),
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),

@@ -1,5 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flexibleea/Persistent/persistant.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_document_picker/flutter_document_picker.dart';
 
 class Expertise extends StatefulWidget {
   const Expertise({super.key});
@@ -25,8 +28,10 @@ class _ExpertiseState extends State<Expertise> {
   final TextEditingController _jobTitleController = TextEditingController();
   final TextEditingController _jobDescriptionController =
       TextEditingController();
-  final TextEditingController _datePickerController = TextEditingController();
-  final TextEditingController _timePickerController = TextEditingController();
+  final TextEditingController _datePickerController =
+      TextEditingController(text: 'Select available date');
+  final TextEditingController _timePickerController =
+      TextEditingController(text: 'Select available time');
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
@@ -269,6 +274,31 @@ class _ExpertiseState extends State<Expertise> {
     }
   }
 
+  Future<firebase_storage.UploadTask> uploadFile(File file) async {
+    firebase_storage.UploadTask uploadTask;
+    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('pdfs')
+        .child('/some-file.pdf');
+
+    final metadata = firebase_storage.SettableMetadata(
+        contentType: 'file/pdf',
+        customMetadata: {'picked-file-path': file.path});
+    print("Uploading..!");
+
+    uploadTask = ref.putData(await file.readAsBytes(), metadata);
+
+    print("done..!");
+    return Future.value(uploadTask);
+  }
+
+  void _uploadQualification() async {
+    final path = await FlutterDocumentPicker.openDocument();
+    print(path);
+    File file = File(path!);
+    firebase_storage.UploadTask task = await uploadFile(file);
+  }
+
   void getFreeLancerData() async {
     final DocumentSnapshot userDoc = await FirebaseFirestore.instance
         .collection('Users')
@@ -398,6 +428,48 @@ class _ExpertiseState extends State<Expertise> {
                             ? const CircularProgressIndicator()
                             : MaterialButton(
                                 onPressed: () {
+                                  _uploadQualification();
+                                },
+                                color: const Color.fromARGB(223, 122, 47, 220),
+                                elevation: 8,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(13),
+                                ),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Text(
+                                        'Upload',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Icon(
+                                        Icons.upload_file_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 30),
+                        child: _isLoading
+                            ? const CircularProgressIndicator()
+                            : MaterialButton(
+                                onPressed: () {
                                   _uploadExpertise();
                                 },
                                 color: const Color.fromARGB(223, 163, 47, 220),
@@ -424,7 +496,7 @@ class _ExpertiseState extends State<Expertise> {
                                         width: 10,
                                       ),
                                       Icon(
-                                        Icons.upload_file_rounded,
+                                        Icons.check_circle,
                                         color: Colors.white,
                                       ),
                                     ],
