@@ -331,7 +331,7 @@ class _SignUpState extends State<SignUp> {
                       Padding(
                         padding: EdgeInsets.all(4.0),
                         child: Icon(
-                          Icons.camera,
+                          Icons.camera_alt,
                           color: Color.fromARGB(255, 117, 48, 134),
                         ),
                       ),
@@ -352,7 +352,7 @@ class _SignUpState extends State<SignUp> {
                       Padding(
                         padding: EdgeInsets.all(4.0),
                         child: Icon(
-                          Icons.image,
+                          Icons.photo,
                           color: Color.fromARGB(255, 117, 48, 134),
                         ),
                       ),
@@ -487,7 +487,7 @@ class _SignUpState extends State<SignUp> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 180, horizontal: 165),
+                        vertical: 175, horizontal: 150),
                     child: Container(
                       width: size.width * 0.24,
                       height: size.width * 0.24,

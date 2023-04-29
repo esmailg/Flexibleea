@@ -43,8 +43,8 @@ class MyApp extends StatelessWidget {
             title: 'Flexibleea',
             theme: ThemeData(
                 scaffoldBackgroundColor: Colors.white,
-                primarySwatch: Colors.amber),
-            home: Login(),
+                primarySwatch: Colors.purple),
+            home: UserState(),
           );
         });
   }

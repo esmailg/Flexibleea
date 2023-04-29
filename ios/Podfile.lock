@@ -56,6 +56,8 @@ PODS:
     - FirebaseCoreExtension (~> 10.0)
     - GTMSessionFetcher/Core (< 4.0, >= 2.1)
   - Flutter (1.0.0)
+  - flutter_document_picker (0.0.1):
+    - Flutter
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
@@ -107,6 +109,7 @@ DEPENDENCIES:
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `10.7.0`)
   - Flutter (from `Flutter`)
+  - flutter_document_picker (from `.symlinks/plugins/flutter_document_picker/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
@@ -146,6 +149,8 @@ EXTERNAL SOURCES:
     :tag: 10.7.0
   Flutter:
     :path: Flutter
+  flutter_document_picker:
+    :path: ".symlinks/plugins/flutter_document_picker/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   image_cropper:
@@ -179,6 +184,7 @@ SPEC CHECKSUMS:
   FirebaseFirestore: 712ff268d746fc65efb361e9ce2cfeb458f10643
   FirebaseStorage: 4841efa304543e1f9e4ca116c559c7a1ea2a9d0f
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_document_picker: 109ba1c4622e6e62bfced17c22ff544a9a3541f4
   fluttertoast: eb263d302cc92e04176c053d2385237e9f43fad0
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
@@ -195,4 +201,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 505ab59e5e3edb7b1de5229d03eb36f3a1c17d7d
 
-COCOAPODS: 1.12.0
+COCOAPODS: 1.12.1
