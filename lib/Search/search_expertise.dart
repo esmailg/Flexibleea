@@ -20,7 +20,7 @@ class _SearchScreenState extends State<SearchScreen> {
       decoration: const InputDecoration(
         hintText: 'Search expertise...',
         border: InputBorder.none,
-        hintStyle: TextStyle(color: Colors.white70),
+        hintStyle: TextStyle(color: Color.fromARGB(214, 255, 255, 255)),
       ),
       style: const TextStyle(
         color: Colors.white,

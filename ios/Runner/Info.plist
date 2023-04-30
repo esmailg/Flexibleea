@@ -49,6 +49,10 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 <string>Needs PhotoLib access</string>
+<key>LSApplicationQueriesSchemes</key>  
+<array>         
+  <string>mailto</string>            
+</array>
 
 <key>NSCameraUsageDescription</key>
 <string>Needs camera access</string>

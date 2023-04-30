@@ -241,7 +241,7 @@ class _FreelancerProfileState extends State<FreelancerProfile> {
                                             fct: () {
                                               _mailTo();
                                             },
-                                            icon: Icons.mail_lock_outlined,
+                                            icon: Icons.mail_outlined,
                                           ),
                                           _contactBy(
                                             color: Colors.purple,

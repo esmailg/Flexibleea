@@ -94,9 +94,9 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color.fromARGB(175, 173, 222, 240),
-      elevation: 7,
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      color: Color.fromARGB(87, 236, 207, 237),
+      elevation: 8,
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: ListTile(
         onTap: () {
           Navigator.pushReplacement(

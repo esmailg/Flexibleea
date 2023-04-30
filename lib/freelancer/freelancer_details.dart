@@ -444,50 +444,6 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
                           ),
                         ),
                         dividerWidget(),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 30),
-                            child: _isLoading
-                                ? const CircularProgressIndicator()
-                                : MaterialButton(
-                                    onPressed: () {
-                                      viewQualifications();
-                                    },
-                                    color:
-                                        const Color.fromARGB(223, 122, 47, 220),
-                                    elevation: 8,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(13),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 14),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const [
-                                          Text(
-                                            'View Qualifications',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Icon(
-                                            Icons.picture_as_pdf_rounded,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
