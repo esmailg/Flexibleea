@@ -160,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ['expertise'],
                             expertiseDescription: snapshot.data?.docs[index]
                                 ['description'],
-                            expertiseId: snapshot.data?.docs[index]
+                            freelancerId: snapshot.data?.docs[index]
                                 ['freelancerId'],
                             uploadedBy: snapshot.data?.docs[index]
                                 ['uploadedBy'],

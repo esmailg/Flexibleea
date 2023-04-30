@@ -207,7 +207,7 @@ class _ExpertiseState extends State<Expertise> {
   }
 
   void _uploadExpertise() async {
-    final expertiseId = const Uuid().v4();
+    final freelancerId = const Uuid().v4();
     User? user = FirebaseAuth.instance.currentUser;
     final _uid = user!.uid;
     final isValid = _formKey.currentState!.validate();
@@ -225,9 +225,9 @@ class _ExpertiseState extends State<Expertise> {
       try {
         await FirebaseFirestore.instance
             .collection('Freelancer Expertise')
-            .doc(expertiseId)
+            .doc(freelancerId)
             .set({
-          'freelancerId': expertiseId,
+          'freelancerId': freelancerId,
           'uploadedBy': _uid,
           'email': user.email,
           'category': _expertiseController.text,
@@ -235,7 +235,7 @@ class _ExpertiseState extends State<Expertise> {
           'description': _jobDescriptionController.text,
           'availableDate': _datePickerController.text,
           'availableTime': _timePickerController.text,
-          'jobComments': [],
+          'reviews': [],
           'recruitment': true,
           'createdAt': Timestamp.now(),
           'name': name,
@@ -297,27 +297,6 @@ class _ExpertiseState extends State<Expertise> {
     print(path);
     File file = File(path!);
     firebase_storage.UploadTask task = await uploadFile(file);
-  }
-
-  void getFreeLancerData() async {
-    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-    setState(() {
-      name = userDoc.get('name');
-      userImage = userDoc.get('userImage');
-      phone = userDoc.get('phoneNumber');
-      availableDate = userDoc.get('availableDate');
-      availableTime = userDoc.get('availableTime');
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getFreeLancerData();
   }
 
   @override

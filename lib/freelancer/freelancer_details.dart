@@ -1,18 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flexibleea/Persistent/persistant.dart';
 import 'package:flexibleea/home/home_screen_freelancer.dart';
 import 'package:flexibleea/services/global_methods.dart';
 import 'package:flexibleea/services/global_variables.dart';
+import 'package:flexibleea/widgets/reviews_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:uuid/uuid.dart';
 
 class FreelancerDetailsScreen extends StatefulWidget {
   final String uploadedBy;
-  final String expertiseId;
+  final String freelancerId;
 
   FreelancerDetailsScreen({
     required this.uploadedBy,
-    required this.expertiseId,
+    required this.freelancerId,
   });
   @override
   State<FreelancerDetailsScreen> createState() =>
@@ -21,6 +25,9 @@ class FreelancerDetailsScreen extends StatefulWidget {
 
 class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final TextEditingController _reviewController = TextEditingController();
+  bool _isReviewing = false;
   String? authorName;
   String? userImageUrl;
   String? expertiseCategory;
@@ -38,6 +45,7 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
   bool isDateAvailable = false;
   bool isTimeAvailable = false;
   bool _isLoading = false;
+  bool showReview = false;
 
   requestExpertise() {
     final Uri param = Uri(
@@ -53,7 +61,7 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
   void addRequests() async {
     var docRef = FirebaseFirestore.instance
         .collection('Freelancer Expertise')
-        .doc(widget.expertiseId);
+        .doc(widget.freelancerId);
 
     docRef.update({
       'numberRequests': requests + 1,
@@ -64,7 +72,7 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
 
   viewQualifications() {}
 
-  void getFreelancerData() async {
+  void getFreelancerDatab() async {
     final DocumentSnapshot userDoc = await FirebaseFirestore.instance
         .collection('Users')
         .doc(widget.uploadedBy)
@@ -80,7 +88,7 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
     }
     final DocumentSnapshot expertiseDatabase = await FirebaseFirestore.instance
         .collection('Freelancer Expertise')
-        .doc(widget.expertiseId)
+        .doc(widget.freelancerId)
         .get();
     if (expertiseDatabase == null) {
       return;
@@ -99,18 +107,11 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
     }
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getFreelancerData();
-  }
-
   Widget dividerWidget() {
     return Column(
       children: const [
         SizedBox(
-          height: 7,
+          height: 10,
         ),
         Divider(
           thickness: 2,
@@ -121,6 +122,15 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
         ),
       ],
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getFreelancerDatab();
+    Persistant persistantObject = Persistant();
+    persistantObject.getFreeLancerData();
   }
 
   @override
@@ -153,9 +163,6 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 15,
-              ),
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Card(
@@ -173,12 +180,12 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
                             style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 30,
+                              fontSize: 24,
                             ),
                           ),
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -290,7 +297,7 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
                                               FirebaseFirestore.instance
                                                   .collection(
                                                       'Freelancer Expertise')
-                                                  .doc(widget.expertiseId)
+                                                  .doc(widget.freelancerId)
                                                   .update(
                                                       {'recruitment': true});
                                             } catch (error) {
@@ -304,7 +311,7 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
                                                 ctx: context,
                                                 error: 'action prohibited');
                                           }
-                                          getFreelancerData();
+                                          getFreelancerDatab();
                                         },
                                         child: const Text(
                                           'ON',
@@ -335,7 +342,7 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
                                               FirebaseFirestore.instance
                                                   .collection(
                                                       'Freelancer Expertise')
-                                                  .doc(widget.expertiseId)
+                                                  .doc(widget.freelancerId)
                                                   .update(
                                                       {'recruitment': false});
                                             } catch (error) {
@@ -349,7 +356,7 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
                                                 ctx: context,
                                                 error: 'action prohibited');
                                           }
-                                          getFreelancerData();
+                                          getFreelancerDatab();
                                         },
                                         child: const Text(
                                           'OFF',
@@ -487,7 +494,7 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
                 ),
               ),
               const SizedBox(
-                height: 25,
+                height: 20,
               ),
               Center(
                 child: MaterialButton(
@@ -516,6 +523,237 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
                         SizedBox(
                           width: 10,
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Card(
+                  color: Colors.white70,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AnimatedSwitcher(
+                          duration: const Duration(
+                            milliseconds: 500,
+                          ),
+                          child: _isReviewing
+                              ? Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Flexible(
+                                      flex: 3,
+                                      child: TextField(
+                                        controller: _reviewController,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                        ),
+                                        maxLength: 200,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 6,
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Theme.of(context)
+                                              .scaffoldBackgroundColor,
+                                          enabledBorder:
+                                              const UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          focusedBorder:
+                                              const OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.purpleAccent),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: MaterialButton(
+                                              onPressed: () async {
+                                                if (_reviewController
+                                                        .text.length <
+                                                    7) {
+                                                  GlobalMethod.showErrorDialog(
+                                                      ctx: context,
+                                                      error:
+                                                          'Review cannot be less than 7 characters');
+                                                } else {
+                                                  final _generatedId =
+                                                      const Uuid().v4();
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection(
+                                                          'Freelancer Expertise')
+                                                      .doc(widget.freelancerId)
+                                                      .update({
+                                                    'reviews':
+                                                        FieldValue.arrayUnion([
+                                                      {
+                                                        'Id': FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid,
+                                                        'reviewId':
+                                                            _generatedId,
+                                                        'name': name,
+                                                        'userImageUrl':
+                                                            userImage,
+                                                        'reviewBody':
+                                                            _reviewController
+                                                                .text,
+                                                        'time': Timestamp.now(),
+                                                      }
+                                                    ]),
+                                                  });
+                                                  await Fluttertoast.showToast(
+                                                    msg:
+                                                        'Your review has been added',
+                                                    toastLength:
+                                                        Toast.LENGTH_LONG,
+                                                    backgroundColor:
+                                                        Colors.grey,
+                                                    fontSize: 18.0,
+                                                  );
+                                                  _reviewController.clear();
+                                                }
+                                                setState(() {
+                                                  showReview = true;
+                                                });
+                                              },
+                                              color: const Color.fromARGB(
+                                                  223, 122, 47, 220),
+                                              elevation: 4,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: const Text(
+                                                'Post',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                _isReviewing = !_isReviewing;
+                                                showReview = false;
+                                              });
+                                            },
+                                            child: const Text('Cancel'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    FirebaseAuth.instance.currentUser!.uid !=
+                                            widget.uploadedBy
+                                        ? IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                _isReviewing = !_isReviewing;
+                                              });
+                                            },
+                                            icon: const Icon(
+                                              Icons.add_comment_rounded,
+                                              color: Color.fromARGB(
+                                                  223, 122, 47, 220),
+                                              size: 40,
+                                            ),
+                                          )
+                                        : Container(),
+                                    const SizedBox(width: 230),
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          showReview = true;
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.arrow_drop_down_circle_sharp,
+                                        color:
+                                            Color.fromARGB(223, 122, 47, 220),
+                                        size: 40,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                        showReview == false
+                            ? Container()
+                            : Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: FutureBuilder<DocumentSnapshot>(
+                                  future: FirebaseFirestore.instance
+                                      .collection('Freelancer Expertise')
+                                      .doc(widget.freelancerId)
+                                      .get(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    } else {
+                                      if (snapshot.data == null) {
+                                        const Center(
+                                          child: Text('No reviews posted'),
+                                        );
+                                      }
+                                    }
+                                    return ListView.separated(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        return ReviewsWidget(
+                                          reviewId: snapshot.data!['reviews']
+                                              [index]['reviewId'],
+                                          reviewerId: snapshot.data!['reviews']
+                                              [index]['Id'],
+                                          reviewerName: snapshot
+                                              .data!['reviews'][index]['name'],
+                                          reviewbody: snapshot.data!['reviews']
+                                              [index]['reviewBody'],
+                                          reviewerImageUrl:
+                                              snapshot.data!['reviews'][index]
+                                                  ['userImageUrl'],
+                                        );
+                                      },
+                                      separatorBuilder: (context, index) {
+                                        return const Divider(
+                                          thickness: 1,
+                                          color: Colors.grey,
+                                        );
+                                      },
+                                      itemCount:
+                                          snapshot.data!['reviews'].length,
+                                    );
+                                  },
+                                ),
+                              ),
                       ],
                     ),
                   ),

@@ -8,7 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 class ExpertiseWidget extends StatefulWidget {
   final String expertiseTitle;
   final String expertiseDescription;
-  final String expertiseId;
+  final String freelancerId;
   final String uploadedBy;
   final String userImage;
   final String name;
@@ -21,7 +21,7 @@ class ExpertiseWidget extends StatefulWidget {
   const ExpertiseWidget({
     required this.expertiseTitle,
     required this.expertiseDescription,
-    required this.expertiseId,
+    required this.freelancerId,
     required this.uploadedBy,
     required this.userImage,
     required this.name,
@@ -53,7 +53,7 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
                     if (widget.uploadedBy == _uid) {
                       await FirebaseFirestore.instance
                           .collection('Freelancer Expertise')
-                          .doc(widget.expertiseId)
+                          .doc(widget.freelancerId)
                           .delete();
                       await Fluttertoast.showToast(
                         msg: 'Expertise deleted',
@@ -94,7 +94,7 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color.fromARGB(60, 214, 167, 239),
+      color: Color.fromARGB(155, 246, 215, 114),
       elevation: 7,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: ListTile(
@@ -104,7 +104,7 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
             MaterialPageRoute(
               builder: (context) => FreelancerDetailsScreen(
                 uploadedBy: widget.uploadedBy,
-                expertiseId: widget.expertiseId,
+                freelancerId: widget.freelancerId,
               ),
             ),
           );
@@ -128,7 +128,7 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-            color: Color.fromARGB(255, 28, 138, 222),
+            color: Color.fromARGB(255, 98, 4, 250),
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
