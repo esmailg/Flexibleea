@@ -94,7 +94,7 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color.fromARGB(155, 246, 215, 114),
+      color: Color.fromARGB(175, 173, 222, 240),
       elevation: 7,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: ListTile(
@@ -115,10 +115,10 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         leading: Container(
-          padding: const EdgeInsets.only(right: 12),
+          padding: const EdgeInsets.only(right: 8),
           decoration: const BoxDecoration(
             border: Border(
-              right: BorderSide(width: 1),
+              right: BorderSide(width: 1.5),
             ),
           ),
           child: Image.network(widget.userImage),
@@ -128,7 +128,7 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-            color: Color.fromARGB(255, 98, 4, 250),
+            color: Colors.deepPurpleAccent,
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
