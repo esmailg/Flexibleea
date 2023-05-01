@@ -3,11 +3,14 @@
    <application
         android:label="flexibleea"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
+        
         <activity
     android:name="com.yalantis.ucrop.UCropActivity"
     android:screenOrientation="portrait"
     android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+    
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -35,4 +38,12 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <queries>    
+        ... other intents
+        <!-- If your app sends emails -->
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="*/*" />
+        </intent>
+    </queries>
 </manifest>

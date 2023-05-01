@@ -32,6 +32,7 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
   String? userImageUrl;
   String? expertiseCategory;
   String? expertiseDescription;
+  String? hourlyPayRate;
   String? expertiseTitle;
   bool? recruitment;
   Timestamp? postedDateTimeStamp;
@@ -103,6 +104,7 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
         postedDateTimeStamp = expertiseDatabase.get('createdAt');
         availableDate = expertiseDatabase.get('availableDate');
         availableTime = expertiseDatabase.get('availableTime');
+        hourlyPayRate = expertiseDatabase.get('hourlyPayRate');
       });
     }
   }
@@ -111,14 +113,14 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
     return Column(
       children: const [
         SizedBox(
-          height: 10,
+          height: 8,
         ),
         Divider(
           thickness: 2,
           color: Colors.grey,
         ),
         SizedBox(
-          height: 10,
+          height: 8,
         ),
       ],
     );
@@ -444,6 +446,28 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
                           ),
                         ),
                         dividerWidget(),
+                        const Text(
+                          'Hourly Payrate',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          hourlyPayRate == null ? '' : hourlyPayRate!,
+                          textAlign: TextAlign.justify,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 25,
+                        ),
                       ],
                     ),
                   ),
@@ -452,37 +476,44 @@ class _FreelancerDetailsScreenState extends State<FreelancerDetailsScreen> {
               const SizedBox(
                 height: 20,
               ),
-              Center(
-                child: MaterialButton(
-                  onPressed: () {
-                    requestExpertise();
-                  },
-                  color: const Color.fromARGB(223, 122, 47, 220),
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(13),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          'Request Freelancer',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FirebaseAuth.instance.currentUser!.uid != widget.uploadedBy
+                      ? Center(
+                          child: MaterialButton(
+                            onPressed: () {
+                              requestExpertise();
+                            },
+                            color: const Color.fromARGB(223, 122, 47, 220),
+                            elevation: 8,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(13),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    'Request Freelancer',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 25,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                        )
+                      : Container(),
+                ],
               ),
               const SizedBox(
                 height: 30,

@@ -32,6 +32,7 @@ class _ExpertiseState extends State<Expertise> {
       TextEditingController(text: 'Select available date');
   final TextEditingController _timePickerController =
       TextEditingController(text: 'Select available time');
+  final TextEditingController _payRateController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
@@ -49,6 +50,7 @@ class _ExpertiseState extends State<Expertise> {
     _jobDescriptionController.dispose();
     _datePickerController.dispose();
     _timePickerController.dispose();
+    _payRateController.dispose();
   }
 
   Widget _textTitles({required String label}) {
@@ -235,6 +237,7 @@ class _ExpertiseState extends State<Expertise> {
           'description': _jobDescriptionController.text,
           'availableDate': _datePickerController.text,
           'availableTime': _timePickerController.text,
+          'hourlyPayRate': _payRateController.text,
           'reviews': [],
           'recruitment': true,
           'createdAt': Timestamp.now(),
@@ -252,6 +255,7 @@ class _ExpertiseState extends State<Expertise> {
 
         _jobTitleController.clear();
         _jobDescriptionController.clear();
+        _payRateController.clear();
         setState(() {
           _expertiseController.text = 'Choose category';
           _datePickerController.text = 'Choose Available date';
@@ -395,6 +399,14 @@ class _ExpertiseState extends State<Expertise> {
                                 _showTimePicker();
                               },
                               maxLength: 100,
+                            ),
+                            _textTitles(label: 'Hourly Rate: '),
+                            _textFormField(
+                              valueKey: 'Jobtitle',
+                              controller: _payRateController,
+                              enabled: true,
+                              fct: () {},
+                              maxLength: 30,
                             ),
                           ],
                         ),
