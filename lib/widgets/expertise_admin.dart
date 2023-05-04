@@ -5,7 +5,7 @@ import 'package:flexibleea/services/global_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class ExpertiseWidget extends StatefulWidget {
+class ExpertiseWidgetAdmin extends StatefulWidget {
   final String expertiseTitle;
   final String expertiseDescription;
   final String freelancerId;
@@ -18,7 +18,7 @@ class ExpertiseWidget extends StatefulWidget {
   final String availableDate;
   final String availableTime;
 
-  const ExpertiseWidget({
+  const ExpertiseWidgetAdmin({
     required this.expertiseTitle,
     required this.expertiseDescription,
     required this.freelancerId,
@@ -33,15 +33,11 @@ class ExpertiseWidget extends StatefulWidget {
   });
 
   @override
-  State<ExpertiseWidget> createState() => _ExpertiseWidgetState();
+  State<ExpertiseWidgetAdmin> createState() => _ExpertiseWidgetAdminState();
 }
 
-class _ExpertiseWidgetState extends State<ExpertiseWidget> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
+class _ExpertiseWidgetAdminState extends State<ExpertiseWidgetAdmin> {
   _deleteExpertise() {
-    User? user = _auth.currentUser;
-    final _uid = user!.uid;
     showDialog(
         context: context,
         builder: (ctx) {
@@ -50,23 +46,18 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
               TextButton(
                 onPressed: () async {
                   try {
-                    if (widget.uploadedBy == _uid) {
-                      await FirebaseFirestore.instance
-                          .collection('Freelancer Expertise')
-                          .doc(widget.freelancerId)
-                          .delete();
-                      await Fluttertoast.showToast(
-                        msg: 'Expertise deleted',
-                        toastLength: Toast.LENGTH_LONG,
-                        backgroundColor: Colors.grey,
-                        fontSize: 18.0,
-                      );
-                      // ignore: use_build_context_synchronously
-                      Navigator.canPop(context) ? Navigator.pop(context) : null;
-                    } else {
-                      GlobalMethod.showErrorDialog(
-                          ctx: ctx, error: 'Cannot perform action');
-                    }
+                    await FirebaseFirestore.instance
+                        .collection('Freelancer Expertise')
+                        .doc()
+                        .delete();
+                    await Fluttertoast.showToast(
+                      msg: 'Expertise deleted',
+                      toastLength: Toast.LENGTH_LONG,
+                      backgroundColor: Colors.grey,
+                      fontSize: 18.0,
+                    );
+                    // ignore: use_build_context_synchronously
+                    Navigator.canPop(context) ? Navigator.pop(context) : null;
                   } catch (error) {
                     GlobalMethod.showErrorDialog(
                         ctx: ctx, error: 'Expertise cannot be deleted');
@@ -99,17 +90,6 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: ListTile(
         onTap: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FreelancerDetailsScreen(
-                uploadedBy: widget.uploadedBy,
-                freelancerId: widget.freelancerId,
-              ),
-            ),
-          );
-        },
-        onLongPress: () {
           _deleteExpertise();
         },
         contentPadding:

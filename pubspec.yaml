@@ -51,6 +51,7 @@ dependencies:
   time_range_picker: ^2.2.0
   flutter_document_picker: ^5.1.0
   font_awesome_flutter: ^10.4.0
+  get: any
 
 dev_dependencies:
   flutter_test:

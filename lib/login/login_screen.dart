@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flexibleea/admin/admin_home.dart';
 import 'package:flexibleea/services/global_methods.dart';
 import 'package:flexibleea/signup/signup_page.dart';
 import 'package:flutter/services.dart';
@@ -167,6 +169,32 @@ class _LoginState extends State<Login> {
             )));
   }
 
+  Widget buildAdminLoginBtn() {
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: 25),
+        width: double.infinity,
+        child: ButtonTheme(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.all(15),
+                backgroundColor: const Color.fromARGB(255, 255, 206, 28),
+              ),
+              // ignore: avoid_print
+              onPressed: _submitAdminLogin,
+
+              child: const Text(
+                'Admin Log In',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            )));
+  }
+
   Widget buildSignUpBtn() {
     return GestureDetector(
       onTap: () => Navigator.push(
@@ -200,6 +228,37 @@ class _LoginState extends State<Login> {
         );
         // ignore: use_build_context_synchronously
         Navigator.canPop(context) ? Navigator.pop(context) : null;
+      } catch (error) {
+        setState(() {
+          _isLoading = false;
+        });
+        GlobalMethod.showErrorDialog(error: error.toString(), ctx: context);
+        print('Error occured $error');
+      }
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void _submitAdminLogin() async {
+    final isValid = _loginFormKey.currentState!.validate();
+    if (isValid) {
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        await FirebaseFirestore.instance
+            .collection('admin')
+            .doc('adminLogin')
+            .snapshots()
+            .forEach((element) {
+          if (element.data()?['adminEmail'] == _emailTextController.text &&
+              element.data()?['adminPassword'] == _passTextController.text) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => AdminHomePage()));
+          }
+        });
       } catch (error) {
         setState(() {
           _isLoading = false;
@@ -251,6 +310,7 @@ class _LoginState extends State<Login> {
                     buildPassword(),
                     buildForgotPassButton(),
                     buildLoginBtn(),
+                    buildAdminLoginBtn(),
                     buildSignUpBtn(),
                   ],
                 ),
