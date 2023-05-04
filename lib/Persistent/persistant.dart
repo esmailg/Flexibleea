@@ -13,6 +13,7 @@ class Persistant {
     'Arts & Design',
     'Marketing',
     'Accounting',
+    'Medical',
   ];
 
   void getFreeLancerData() async {

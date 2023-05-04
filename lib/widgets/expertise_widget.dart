@@ -121,11 +121,12 @@ class _ExpertiseWidgetState extends State<ExpertiseWidget> {
               right: BorderSide(width: 1.5),
             ),
           ),
-          child: Image.network(widget.userImage),
+          child: SizedBox(
+              height: 60, width: 50, child: Image.network(widget.userImage)),
         ),
         title: Text(
           widget.expertiseTitle,
-          maxLines: 2,
+          maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
             color: Colors.deepPurpleAccent,

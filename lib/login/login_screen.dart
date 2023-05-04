@@ -171,7 +171,7 @@ class _LoginState extends State<Login> {
 
   Widget buildAdminLoginBtn() {
     return Container(
-        padding: const EdgeInsets.symmetric(vertical: 25),
+        padding: const EdgeInsets.symmetric(vertical: 15),
         width: double.infinity,
         child: ButtonTheme(
             shape:
