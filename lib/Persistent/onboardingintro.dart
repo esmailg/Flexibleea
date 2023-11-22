@@ -66,24 +66,24 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       ),
       pages: [
         PageViewModel(
-          title: "Fractional shares",
+          title: "Flexibella",
           body:
-              "Instead of having to buy an entire share, invest any amount you want.",
-          image: Image.asset('assets/fullscreen/1.png'),
+              "The place where freelancers have agency over payrate, work dates & hours.",
+          image: Image.asset('assets/images/intro.jpg'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Learn as you go",
+          title: "Freelancer Oriented",
           body:
-              "Download the Stockpile app and master the market with our mini-lesson.",
-          image: Image.asset('assets/fullscreen/2.png'),
+              "Share your expertise and showcase your qualification with your own terms.",
+          image: Image.asset('assets/images/login.jpg'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Learn as you ",
+          title: "Grow and Learn ",
           body:
-              "Download the Stockpile app and master the market with our mini-lesson.",
-          image: Image.asset('assets/fullscreen/3.png'),
+              "Recrute, review, and see trends showcased in flexible expertise.",
+          image: Image.asset('assets/images/signup.jpg'),
           decoration: pageDecoration,
         ),
       ],
