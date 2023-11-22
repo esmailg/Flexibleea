@@ -7,11 +7,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flexibleea/home/home_screen_freelancer.dart';
 import 'package:flexibleea/login/login_screen.dart';
 import 'package:flexibleea/services/global_methods.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'otp.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -88,7 +89,8 @@ class _SignUpState extends State<SignUp> {
           'createdAt': Timestamp.now(),
         });
 
-        Navigator.canPop(context) ? Navigator.pop(context) : null;
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => OTPScreen(_passTextController.text)));
       } catch (error) {
         setState(() {
           _isLoading = false;
